@@ -1,0 +1,63 @@
+project:
+  name: human-vs-llm-text-analysis
+  description: >
+    A project to analyze and explain disagreement cases between human judgments and model predictions 
+    on whether a text was written by a human or an AI language model. It involves feature extraction 
+    (readability, sentiment, lexical diversity, pronoun use), heuristic tagging of failure reasons, 
+    and visualization of patterns across true labels and error types.
+  author: anonymous
+  license: CC-BY-NC-SA 4.0
+  version: 1.0
+
+data:
+  source: human-vs-llm-text-corpus.csv
+  subset_used: disagreement_cases
+  label_column: true_label
+  prediction_column: model_prediction
+  annotator_column: human_judgment
+
+features:
+  - readability
+  - sentiment
+  - pronoun_count
+  - lexical_diversity
+  - failure_reason
+
+heuristics:
+  - irony_or_culture
+  - nonstandard_grammar
+  - logical_inconsistency
+
+models:
+  - name: RandomForestClassifier
+    purpose: Predict if text is written by human or LLM
+    features_used:
+      - readability
+      - sentiment
+      - pronoun_count
+      - lexical_diversity
+
+environment:
+  language: python
+  dependencies:
+    - pandas
+    - numpy
+    - matplotlib
+    - seaborn
+    - scikit-learn
+    - textstat
+    - textblob
+    - spacy
+    - en_core_web_sm
+
+visualizations:
+  - type: boxplot
+    purpose: Compare feature distributions by true label
+  - type: countplot
+    purpose: Show likely failure reasons for misclassified texts
+
+notebooks:
+  - name: disagreement_analysis.ipynb
+    description: >
+      Core notebook that loads a sample of disagreement cases, extracts features, tags likely model failure reasons,
+      runs a classifier, and generates visualizations to explain where the model fails compared to humans.
